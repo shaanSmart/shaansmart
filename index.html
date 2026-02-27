@@ -1,0 +1,1081 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="ShaanSmart">
+<meta name="theme-color" content="#2a5fa8">
+<link rel="manifest" href="manifest.json">
+<link rel="apple-touch-icon" href="icons/icon-192.png">
+<title>ShaanSmart</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;700;800;900&display=swap" rel="stylesheet">
+<style>
+/* ── RESET & BASE ─────────────────────────────── */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
+
+:root {
+  --bg: #eef1fb;
+  --card: #ffffff;
+  --text: #1a1a2e;
+  --muted: #8890aa;
+  --radius: 26px;
+  --safe-top: env(safe-area-inset-top, 0px);
+  --safe-bot: env(safe-area-inset-bottom, 0px);
+
+  /* subject colors */
+  --math-a:   #2a5fa8; --math-b:   #5b9bd5; --math-bg:   #ddeeff;
+  --read-a:   #1a7a4a; --read-b:   #3db87a; --read-bg:   #d4f5e2;
+  --life-a:   #a84a10; --life-b:   #f07a3a; --life-bg:   #ffe5d3;
+  --sci-a:    #5c3db8; --sci-b:    #9b7fd4; --sci-bg:    #ece5ff;
+
+  /* answer button colors */
+  --blue-bg:#ddeeff;   --blue-mid:#5b9bd5;  --blue-deep:#2a5fa8;  --blue-txt:#1a3d70;
+  --green-bg:#d4f5e2;  --green-mid:#3db87a; --green-deep:#1a7a4a; --green-txt:#0d4a2a;
+  --purple-bg:#ece5ff; --purple-mid:#9b7fd4;--purple-deep:#5c3db8;--purple-txt:#32196e;
+  --red-bg:#ffe5e5;    --red-mid:#e85555;   --red-deep:#a81a1a;   --red-txt:#6e0d0d;
+}
+
+html, body { height: 100%; overflow: hidden; }
+
+body {
+  font-family: 'Nunito', sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  display: flex;
+  flex-direction: column;
+  user-select: none;
+  -webkit-user-select: none;
+}
+
+/* ── SCREENS ─────────────────────────────────── */
+.screen { display: none; flex-direction: column; height: 100%; overflow: hidden; }
+.screen.active { display: flex; }
+
+/* ══════════════════════════════════════════════
+   HOME SCREEN
+══════════════════════════════════════════════ */
+#home {
+  background: linear-gradient(160deg, #1e3a7a 0%, #2a5fa8 50%, #4a8fd8 100%);
+  align-items: center;
+  justify-content: flex-start;
+  padding-top: calc(var(--safe-top) + 20px);
+  padding-bottom: calc(var(--safe-bot) + 20px);
+  padding-left: 20px;
+  padding-right: 20px;
+  gap: 0;
+  overflow-y: auto;
+}
+
+.home-logo {
+  font-size: clamp(3rem, 12vw, 5rem);
+  animation: floatStar 3s ease-in-out infinite;
+  margin-top: 16px;
+}
+@keyframes floatStar { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-10px)} }
+
+.home-title {
+  font-size: clamp(2rem, 8vw, 3.2rem);
+  font-weight: 900;
+  color: white;
+  margin-top: 8px;
+  letter-spacing: -0.5px;
+}
+.home-sub {
+  font-size: clamp(0.9rem, 3vw, 1.1rem);
+  color: rgba(255,255,255,0.75);
+  font-weight: 700;
+  margin-top: 4px;
+  margin-bottom: 28px;
+}
+
+/* stars strip */
+.stars-strip {
+  background: rgba(255,255,255,0.15);
+  border-radius: 40px;
+  padding: 10px 24px;
+  color: white;
+  font-weight: 900;
+  font-size: 1rem;
+  margin-bottom: 28px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+/* subject cards on home */
+.subject-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 14px;
+  width: 100%;
+  max-width: 500px;
+  margin-bottom: 20px;
+}
+.subject-card {
+  border-radius: 22px;
+  padding: 22px 16px 18px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  cursor: pointer;
+  transition: transform 0.18s, box-shadow 0.18s;
+  box-shadow: 0 6px 20px rgba(0,0,0,0.18);
+  border: 3px solid rgba(255,255,255,0.25);
+  position: relative;
+  overflow: hidden;
+}
+.subject-card::before {
+  content:'';
+  position:absolute; inset:0;
+  background: linear-gradient(135deg, rgba(255,255,255,0.18) 0%, transparent 60%);
+  pointer-events:none;
+}
+.subject-card:active { transform: scale(0.96); }
+.subject-card:hover  { transform: scale(1.03); box-shadow: 0 10px 28px rgba(0,0,0,0.25); }
+
+.subject-card.math   { background: linear-gradient(135deg, var(--math-a), var(--math-b)); }
+.subject-card.read   { background: linear-gradient(135deg, var(--read-a), var(--read-b)); }
+.subject-card.life   { background: linear-gradient(135deg, var(--life-a), var(--life-b)); }
+.subject-card.sci    { background: linear-gradient(135deg, var(--sci-a),  var(--sci-b)); }
+
+.subject-card .s-icon { font-size: 2.4rem; }
+.subject-card .s-name { font-size: 1rem; font-weight: 900; color: white; }
+.subject-card .s-count { font-size: 0.72rem; color: rgba(255,255,255,0.75); font-weight: 700; }
+.subject-card .s-badge {
+  position: absolute; top: 10px; right: 10px;
+  background: rgba(255,255,255,0.25);
+  border-radius: 20px; padding: 3px 9px;
+  font-size: 0.65rem; font-weight: 900; color: white;
+}
+
+.grade-row {
+  display: flex; gap: 8px; flex-wrap: wrap; justify-content: center;
+  margin-bottom: 8px;
+}
+.grade-btn {
+  background: rgba(255,255,255,0.18); border: 2px solid rgba(255,255,255,0.35);
+  border-radius: 40px; padding: 7px 16px;
+  font-family: 'Nunito', sans-serif; font-size: 0.82rem; font-weight: 800;
+  cursor: pointer; color: white; transition: all 0.18s;
+}
+.grade-btn.active { background: white; color: var(--math-a); border-color: white; }
+
+/* ══════════════════════════════════════════════
+   QUIZ SCREEN
+══════════════════════════════════════════════ */
+#quiz {
+  background: var(--bg);
+  padding-top: calc(var(--safe-top) + 0px);
+  padding-bottom: calc(var(--safe-bot) + 8px);
+}
+
+/* quiz header */
+.quiz-header {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 18px 10px;
+  background: white;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+}
+.back-btn {
+  background: none; border: none; font-size: 1.5rem; cursor: pointer; padding: 4px 6px;
+  border-radius: 10px; transition: background 0.15s;
+}
+.back-btn:hover { background: var(--bg); }
+.quiz-subj-name { font-size: 1.05rem; font-weight: 900; }
+.quiz-stars { margin-left: auto; font-size: 0.95rem; font-weight: 800; color: #9a6e00; background: #fff9e0; border-radius: 30px; padding: 5px 14px; }
+
+/* progress */
+.prog-wrap { padding: 10px 18px 6px; }
+.prog-bar-bg { background: #dde3f5; border-radius: 40px; height: 10px; overflow: hidden; }
+.prog-bar-fill { height: 100%; border-radius: 40px; transition: width 0.5s ease; }
+.prog-label { font-size: 0.78rem; font-weight: 800; color: var(--muted); margin-bottom: 5px; }
+
+/* mic bar */
+.mic-bar {
+  margin: 6px 18px; border-radius: 13px; padding: 10px 18px;
+  font-size: 0.92rem; font-weight: 800; text-align: center;
+  background: #e8eeff; color: var(--blue-deep);
+  display: flex; align-items: center; justify-content: center; gap: 8px;
+  transition: all 0.3s; min-height: 42px;
+}
+.mic-bar.listening { background: var(--green-bg); color: var(--green-deep); animation: pulse 1.1s ease infinite; }
+.mic-bar.heard     { background: #fff8d6; color: #7a5500; }
+@keyframes pulse { 0%,100%{opacity:1} 50%{opacity:0.55} }
+
+/* question area — scrollable */
+.quiz-scroll {
+  flex: 1;
+  overflow-y: auto;
+  padding: 6px 18px 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  -webkit-overflow-scrolling: touch;
+}
+
+.question-card {
+  background: white; border-radius: var(--radius);
+  box-shadow: 0 4px 18px rgba(0,0,0,0.07);
+  padding: 22px 26px; text-align: center;
+  animation: fadeUp 0.28s ease;
+}
+@keyframes fadeUp { from{opacity:0;transform:translateY(8px)} to{opacity:1;transform:translateY(0)} }
+
+.q-badge {
+  display: inline-block; border-radius: 40px; padding: 4px 14px;
+  font-size: 0.72rem; font-weight: 900; text-transform: uppercase;
+  letter-spacing: 1px; margin-bottom: 12px;
+}
+.q-image { font-size: 2.8rem; margin-bottom: 8px; }
+.q-text  { font-size: clamp(1.3rem, 4.5vw, 1.8rem); font-weight: 900; line-height: 1.3; }
+.q-hint  { font-size: 0.82rem; color: var(--muted); font-weight: 700; margin-top: 6px; }
+
+/* color legend */
+.color-legend {
+  display: flex; gap: 8px; justify-content: center; flex-wrap: wrap;
+}
+.legend-chip {
+  border-radius: 40px; padding: 4px 14px;
+  font-size: 0.75rem; font-weight: 900;
+  display: flex; align-items: center; gap: 5px;
+}
+
+/* answer grid */
+.answers-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+
+.ans-btn {
+  border: 3px solid transparent; border-radius: 20px; padding: 0;
+  font-family: 'Nunito', sans-serif; cursor: pointer;
+  display: flex; flex-direction: column; align-items: stretch;
+  min-height: 110px; overflow: hidden;
+  transition: transform 0.18s, box-shadow 0.18s;
+  box-shadow: 0 3px 12px rgba(0,0,0,0.08);
+}
+.ans-btn:hover  { transform: scale(1.04); box-shadow: 0 6px 20px rgba(0,0,0,0.14); }
+.ans-btn:active { transform: scale(0.97); }
+
+.btn-stripe      { height: 10px; width: 100%; flex-shrink: 0; }
+.btn-color-label { font-size: 0.72rem; font-weight: 900; text-transform: uppercase; letter-spacing: 1.5px; padding: 6px 12px 2px; }
+.btn-value       { flex:1; display:flex; align-items:center; justify-content:center; font-size:1.45rem; font-weight:900; padding:6px 12px 14px; line-height:1.2; }
+
+.ans-btn.color-blue   { background:var(--blue-bg);   border-color:var(--blue-mid); }
+.ans-btn.color-blue   .btn-stripe { background:var(--blue-mid); }
+.ans-btn.color-blue   .btn-color-label,.ans-btn.color-blue   .btn-value { color:var(--blue-txt); }
+
+.ans-btn.color-green  { background:var(--green-bg);  border-color:var(--green-mid); }
+.ans-btn.color-green  .btn-stripe { background:var(--green-mid); }
+.ans-btn.color-green  .btn-color-label,.ans-btn.color-green  .btn-value { color:var(--green-txt); }
+
+.ans-btn.color-purple { background:var(--purple-bg); border-color:var(--purple-mid); }
+.ans-btn.color-purple .btn-stripe { background:var(--purple-mid); }
+.ans-btn.color-purple .btn-color-label,.ans-btn.color-purple .btn-value { color:var(--purple-txt); }
+
+.ans-btn.color-red    { background:var(--red-bg);    border-color:var(--red-mid); }
+.ans-btn.color-red    .btn-stripe { background:var(--red-mid); }
+.ans-btn.color-red    .btn-color-label,.ans-btn.color-red    .btn-value { color:var(--red-txt); }
+
+.ans-btn.correct { box-shadow: 0 0 0 5px var(--green-mid), 0 6px 20px rgba(0,0,0,0.12) !important; animation: bigPop 0.32s ease; }
+.ans-btn.wrong   { opacity: 0.42; }
+@keyframes bigPop { 0%{transform:scale(1)} 45%{transform:scale(1.08)} 100%{transform:scale(1)} }
+
+/* feedback */
+.feedback-area {
+  border-radius: 16px; padding: 12px 18px;
+  font-size: 1rem; font-weight: 800; text-align: center;
+  display: flex; flex-direction: column; align-items: center; gap: 4px;
+  opacity: 0; transition: opacity 0.3s; min-height: 60px;
+}
+.feedback-area.show { opacity: 1; }
+.feedback-area.good { background: var(--green-bg); color: var(--green-deep); }
+.feedback-area.bad  { background: var(--red-bg);   color: var(--red-deep); }
+.equation-display   { font-size: 1.3rem; font-weight: 900; margin-top: 2px; }
+
+/* bottom bar */
+.quiz-bottom {
+  padding: 10px 18px;
+  background: white;
+  box-shadow: 0 -2px 10px rgba(0,0,0,0.06);
+  display: flex; align-items: center; justify-content: space-between; gap: 14px;
+}
+.mic-btn {
+  width: 62px; height: 62px; border-radius: 50%; border: none;
+  background: var(--blue-mid); color: white; font-size: 1.6rem; cursor: pointer;
+  box-shadow: 0 4px 16px rgba(74,127,224,0.4); transition: all 0.18s; flex-shrink: 0;
+}
+.mic-btn:active { transform: scale(0.94); }
+.mic-btn.active { background: var(--green-mid); animation: pulse 1s ease infinite; }
+.mic-hint { font-size: 0.78rem; font-weight: 700; color: var(--muted); text-align: center; line-height: 1.5; flex:1; }
+.next-btn {
+  background: var(--blue-deep); color: white; border: none; border-radius: 14px;
+  padding: 13px 22px; font-family: 'Nunito', sans-serif;
+  font-size: 0.95rem; font-weight: 900; cursor: pointer; display: none; flex-shrink:0;
+  transition: transform 0.15s;
+}
+.next-btn:active { transform: scale(0.97); }
+
+/* ══════════════════════════════════════════════
+   CELEBRATION OVERLAY
+══════════════════════════════════════════════ */
+.celebration {
+  position: fixed; inset: 0;
+  background: rgba(255,255,255,0.97);
+  display: none; flex-direction: column;
+  align-items: center; justify-content: center;
+  text-align: center; gap: 14px; z-index: 999;
+  padding: 32px; animation: fadeUp 0.4s ease;
+}
+.celebration.show { display: flex; }
+.trophy { font-size: 5rem; animation: bounce 0.7s ease infinite alternate; }
+@keyframes bounce { from{transform:translateY(0)} to{transform:translateY(-12px)} }
+.celebration h1 { font-size: clamp(1.6rem,6vw,2.2rem); font-weight: 900; color: var(--blue-deep); }
+.celebration p  { font-size: 1rem; color: var(--muted); font-weight: 700; max-width: 420px; }
+.cel-btn {
+  background: var(--blue-deep); color: white; border: none; border-radius: 16px;
+  padding: 14px 34px; font-family: 'Nunito', sans-serif;
+  font-size: 1.05rem; font-weight: 900; cursor: pointer; margin-top: 6px;
+  transition: transform 0.15s;
+}
+.cel-btn:active { transform: scale(0.97); }
+.cel-btn.outline {
+  background: transparent; border: 3px solid var(--blue-deep); color: var(--blue-deep);
+}
+
+/* ══════════════════════════════════════════════
+   PROGRESS SCREEN
+══════════════════════════════════════════════ */
+#progress {
+  background: var(--bg);
+  padding-top: calc(var(--safe-top) + 0px);
+  padding-bottom: calc(var(--safe-bot) + 0px);
+}
+.prog-screen-header {
+  background: white; padding: 14px 18px;
+  display: flex; align-items: center; gap: 12px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+}
+.prog-screen-header h2 { font-size: 1.1rem; font-weight: 900; }
+.prog-content { flex:1; overflow-y:auto; padding:18px; display:flex; flex-direction:column; gap:14px; }
+
+.stat-card {
+  background: white; border-radius: 20px;
+  padding: 18px 20px; box-shadow: 0 3px 12px rgba(0,0,0,0.07);
+}
+.stat-card h3 { font-size: 0.8rem; font-weight: 900; color: var(--muted); text-transform:uppercase; letter-spacing:1px; margin-bottom:10px; }
+.stat-row { display:flex; justify-content:space-between; align-items:center; padding:6px 0; border-bottom:1px solid #f0f0f0; }
+.stat-row:last-child { border-bottom:none; }
+.stat-label { font-size:0.92rem; font-weight:700; }
+.stat-val { font-size:1rem; font-weight:900; }
+.stat-val.green { color:var(--green-deep); }
+.stat-val.red   { color:var(--red-deep); }
+
+.subj-progress-bar { height:10px; border-radius:10px; background:#eee; overflow:hidden; flex:1; margin:0 10px; }
+.subj-progress-fill { height:100%; border-radius:10px; transition:width 0.6s ease; }
+
+.print-btn {
+  background: var(--math-a); color: white; border: none; border-radius: 14px;
+  padding: 14px; font-family: 'Nunito', sans-serif; font-size: 0.95rem; font-weight: 900;
+  cursor: pointer; text-align:center; transition:transform 0.15s;
+}
+.print-btn:active { transform:scale(0.97); }
+
+/* voice status */
+.voice-status { font-size:0.68rem; color:var(--muted); text-align:center; font-weight:700; padding:2px 0 4px; }
+
+/* nav bar */
+.nav-bar {
+  display: flex; background: white;
+  box-shadow: 0 -2px 10px rgba(0,0,0,0.06);
+  padding-bottom: var(--safe-bot);
+}
+.nav-item {
+  flex:1; display:flex; flex-direction:column; align-items:center;
+  padding:10px 4px 8px; cursor:pointer; border:none; background:none;
+  font-family:'Nunito',sans-serif; gap:3px; transition:all 0.15s;
+}
+.nav-item .nav-icon { font-size:1.4rem; }
+.nav-item .nav-label { font-size:0.7rem; font-weight:800; color:var(--muted); }
+.nav-item.active .nav-label { color:var(--math-a); }
+.nav-item.active .nav-icon  { transform:scale(1.15); }
+</style>
+</head>
+<body>
+
+<!-- ══ HOME SCREEN ═══════════════════════════════ -->
+<div class="screen active" id="home">
+  <div style="flex:1;overflow-y:auto;display:flex;flex-direction:column;align-items:center;padding:calc(var(--safe-top) + 16px) 20px 16px;gap:0">
+    <div class="home-logo">🌟</div>
+    <div class="home-title">ShaanSmart</div>
+    <div class="home-sub">Shaan's Learning Adventure</div>
+
+    <div class="stars-strip">
+      ⭐ <span id="home-stars">0</span> total stars &nbsp;·&nbsp; 🔥 <span id="home-streak">0</span> day streak
+    </div>
+
+    <!-- Grade selector -->
+    <div style="color:rgba(255,255,255,0.8);font-size:0.8rem;font-weight:800;margin-bottom:8px;align-self:flex-start;padding-left:2px">GRADE LEVEL</div>
+    <div class="grade-row" style="justify-content:flex-start;width:100%;max-width:500px">
+      <button class="grade-btn active" onclick="setGrade(2)" id="g2">Grade 2</button>
+      <button class="grade-btn" onclick="setGrade(3)" id="g3">Grade 3</button>
+      <button class="grade-btn" onclick="setGrade(4)" id="g4">Grade 4</button>
+      <button class="grade-btn" onclick="setGrade(5)" id="g5">Grade 5</button>
+    </div>
+
+    <div style="color:rgba(255,255,255,0.8);font-size:0.8rem;font-weight:800;margin:18px 0 10px;align-self:flex-start;padding-left:2px">CHOOSE A SUBJECT</div>
+
+    <div class="subject-grid">
+      <div class="subject-card math" onclick="startSubject('math')">
+        <div class="s-badge" id="math-badge">—</div>
+        <div class="s-icon">🔢</div>
+        <div class="s-name">Math</div>
+        <div class="s-count">Multiply · Divide · Fill-in</div>
+      </div>
+      <div class="subject-card read" onclick="startSubject('reading')">
+        <div class="s-badge" id="reading-badge">—</div>
+        <div class="s-icon">📖</div>
+        <div class="s-name">Reading</div>
+        <div class="s-count">Words · Stories · Rhymes</div>
+      </div>
+      <div class="subject-card life" onclick="startSubject('life')">
+        <div class="s-badge" id="life-badge">—</div>
+        <div class="s-icon">🏠</div>
+        <div class="s-name">Life Skills</div>
+        <div class="s-count">Daily Tasks · Safety · Social</div>
+      </div>
+      <div class="subject-card sci" onclick="startSubject('science')">
+        <div class="s-badge" id="science-badge">—</div>
+        <div class="s-icon">🔬</div>
+        <div class="s-name">Science</div>
+        <div class="s-count">Nature · Earth · Animals</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Nav bar -->
+  <div class="nav-bar">
+    <button class="nav-item active" id="nav-home" onclick="showScreen('home')">
+      <span class="nav-icon">🏠</span><span class="nav-label">Home</span>
+    </button>
+    <button class="nav-item" id="nav-progress" onclick="showScreen('progress')">
+      <span class="nav-icon">📊</span><span class="nav-label">Progress</span>
+    </button>
+  </div>
+</div>
+
+<!-- ══ QUIZ SCREEN ═══════════════════════════════ -->
+<div class="screen" id="quiz">
+  <div class="quiz-header">
+    <button class="back-btn" onclick="showScreen('home')">←</button>
+    <span class="quiz-subj-name" id="quiz-subj-name">Math</span>
+    <div class="quiz-stars">⭐ <span id="quiz-stars">0</span></div>
+  </div>
+
+  <div class="prog-wrap">
+    <div class="prog-label" id="prog-label">Question 1 of 10</div>
+    <div class="prog-bar-bg"><div class="prog-bar-fill" id="prog-fill" style="width:0%"></div></div>
+  </div>
+
+  <div class="mic-bar" id="mic-bar">🎤 Press mic and say the color — or point &amp; tap</div>
+
+  <div class="quiz-scroll" id="quiz-scroll">
+    <div class="question-card" id="question-card"></div>
+    <div class="color-legend" id="color-legend"></div>
+    <div class="answers-grid" id="answers-grid"></div>
+    <div class="feedback-area" id="feedback"></div>
+    <div class="voice-status" id="voice-status"></div>
+  </div>
+
+  <div class="quiz-bottom">
+    <div class="mic-hint">Say the <strong>color</strong><br><span style="opacity:0.6;font-size:0.7rem">Blue · Green · Purple · Red</span></div>
+    <button class="mic-btn" id="mic-btn" onclick="toggleMic()">🎤</button>
+    <button class="next-btn" id="next-btn" onclick="nextQuestion()">Next ➡️</button>
+  </div>
+</div>
+
+<!-- ══ PROGRESS SCREEN ═══════════════════════════ -->
+<div class="screen" id="progress">
+  <div class="prog-screen-header">
+    <button class="back-btn" onclick="showScreen('home')">←</button>
+    <h2>Shaan's Progress</h2>
+  </div>
+  <div class="prog-content" id="prog-content">
+    <!-- filled by JS -->
+  </div>
+  <div class="nav-bar">
+    <button class="nav-item" id="nav-home2" onclick="showScreen('home')">
+      <span class="nav-icon">🏠</span><span class="nav-label">Home</span>
+    </button>
+    <button class="nav-item active" id="nav-progress2" onclick="showScreen('progress')">
+      <span class="nav-icon">📊</span><span class="nav-label">Progress</span>
+    </button>
+  </div>
+</div>
+
+<!-- ══ CELEBRATION ═══════════════════════════════ -->
+<div class="celebration" id="celebration">
+  <div class="trophy">🏆</div>
+  <h1>Shaan, you are AMAZING!</h1>
+  <p id="cel-msg"></p>
+  <div style="font-size:2rem">⭐⭐⭐⭐⭐</div>
+  <button class="cel-btn" onclick="startNewRound()">Keep Going! 🚀</button>
+  <button class="cel-btn outline" onclick="showScreen('home')" style="margin-top:4px">Back to Home</button>
+</div>
+
+<script>
+// ══════════════════════════════════════════════════
+//  VOICE
+// ══════════════════════════════════════════════════
+let chosenVoice = null;
+function loadVoice() {
+  const voices = window.speechSynthesis?.getVoices() || [];
+  if (!voices.length) return;
+  const tests = [
+    v=>v.name==='Samantha', v=>v.name==='Karen', v=>v.name==='Tessa', v=>v.name==='Moira',
+    v=>/Zira/i.test(v.name), v=>/Jenny/i.test(v.name)&&v.lang.startsWith('en'),
+    v=>/Aria/i.test(v.name)&&v.lang.startsWith('en'), v=>/Michelle/i.test(v.name)&&v.lang.startsWith('en'),
+    v=>/female/i.test(v.name)&&v.lang.startsWith('en'),
+    v=>v.lang==='en-AU', v=>v.lang==='en-GB', v=>v.lang==='en-US', v=>v.lang.startsWith('en'),
+  ];
+  for (const t of tests) { const m=voices.find(t); if(m){chosenVoice=m;break;} }
+  const el=document.getElementById('voice-status');
+  if(el) el.textContent = chosenVoice ? `🎙️ ${chosenVoice.name}` : '';
+}
+if(window.speechSynthesis){ window.speechSynthesis.onvoiceschanged=loadVoice; loadVoice(); }
+
+function speak(txt,rate=0.82,pitch=1.22){
+  if(!window.speechSynthesis||!txt) return;
+  window.speechSynthesis.cancel();
+  const u=new SpeechSynthesisUtterance(txt);
+  if(chosenVoice) u.voice=chosenVoice;
+  u.rate=rate; u.pitch=pitch; u.volume=1;
+  window.speechSynthesis.speak(u);
+}
+const speakQ     = t=>speak(t,0.80,1.12);
+const speakCheer = t=>speak(t,0.79,1.32);
+const speakGent  = t=>speak(t,0.80,1.10);
+
+// ══════════════════════════════════════════════════
+//  ENCOURAGEMENTS
+// ══════════════════════════════════════════════════
+const CHEERS = [
+  "Shaan, you are absolutely amazing! I knew you could do it!",
+  "Yes! Shaan got it right! You are SO smart!",
+  "Wow Shaan! That is exactly right! You should be so proud!",
+  "Shaan, you are a superstar! Keep going — you've got this!",
+  "Oh my goodness Shaan! Perfect answer! You are incredible!",
+  "That's right Shaan! You are brilliant! I am so proud of you!",
+  "Shaan, you did it again! You are totally on fire today!",
+  "Amazing Shaan! You are seriously so clever! Great job!",
+  "Shaan, I love how you know this! You are wonderful!",
+  "Yes yes yes! Shaan is unstoppable! What an absolute superstar!",
+];
+
+// ══════════════════════════════════════════════════
+//  PROGRESS PERSISTENCE  (localStorage)
+// ══════════════════════════════════════════════════
+const STORAGE_KEY = 'shaansmart_v1';
+let progressData = {};
+
+function loadProgress() {
+  try {
+    const raw = localStorage.getItem(STORAGE_KEY);
+    progressData = raw ? JSON.parse(raw) : {};
+  } catch(e) { progressData = {}; }
+  if(!progressData.totalStars)  progressData.totalStars=0;
+  if(!progressData.sessions)    progressData.sessions=[];
+  if(!progressData.bySubject)   progressData.bySubject={};
+  if(!progressData.lastDate)    progressData.lastDate=null;
+  if(!progressData.streak)      progressData.streak=0;
+}
+
+function saveProgress() {
+  try { localStorage.setItem(STORAGE_KEY, JSON.stringify(progressData)); } catch(e){}
+}
+
+function logSession(subject, grade, total, correct, wrongQuestions) {
+  const today = new Date().toISOString().split('T')[0];
+  if(progressData.lastDate !== today) {
+    progressData.streak = progressData.lastDate === yesterday() ? progressData.streak+1 : 1;
+    progressData.lastDate = today;
+  }
+  progressData.totalStars += correct;
+  if(!progressData.bySubject[subject]) progressData.bySubject[subject]={attempts:0,correct:0,wrong:[]};
+  const s = progressData.bySubject[subject];
+  s.attempts += total; s.correct += correct;
+  s.wrong = [...(s.wrong||[]), ...wrongQuestions].slice(-30); // keep last 30
+  progressData.sessions.push({ date:today, subject, grade, total, correct });
+  progressData.sessions = progressData.sessions.slice(-100); // keep last 100
+  saveProgress();
+  updateHomeBadges();
+}
+
+function yesterday() {
+  const d=new Date(); d.setDate(d.getDate()-1); return d.toISOString().split('T')[0];
+}
+
+function updateHomeBadges() {
+  document.getElementById('home-stars').textContent  = progressData.totalStars||0;
+  document.getElementById('home-streak').textContent = progressData.streak||0;
+  document.getElementById('quiz-stars').textContent  = progressData.totalStars||0;
+  ['math','reading','life','science'].forEach(subj=>{
+    const s=progressData.bySubject[subj];
+    const el=document.getElementById(subj+'-badge');
+    if(el && s && s.attempts>0) {
+      const pct=Math.round((s.correct/s.attempts)*100);
+      el.textContent=pct+'%';
+    }
+  });
+}
+
+// ══════════════════════════════════════════════════
+//  QUESTION BANKS
+// ══════════════════════════════════════════════════
+const shuffle = arr => {
+  const a=[...arr];
+  for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]];}
+  return a;
+};
+
+function genD(ans,a,b){
+  const s=new Set([ans+1,ans-1,a+b,ans+b,ans-a,Math.abs(ans-2),ans+3,ans*2]);
+  return [...s].filter(x=>x>0&&x!==ans).sort(()=>Math.random()-0.5).slice(0,3).map(String);
+}
+
+// MATH
+const MULT_PAIRS = {
+  2:[[2,2],[2,3],[2,4],[2,5],[3,3],[3,4],[5,2],[4,2]],
+  3:[[2,6],[2,7],[2,8],[2,9],[3,5],[3,6],[4,4],[4,5],[5,5]],
+  4:[[3,7],[3,8],[4,6],[4,7],[5,6],[5,7],[6,6],[6,5],[7,3]],
+  5:[[4,8],[5,8],[5,9],[6,7],[6,8],[7,7],[7,8],[8,8],[9,6],[12,7]],
+};
+const DIV_PAIRS = {
+  2:[[4,2],[6,2],[6,3],[8,2],[8,4],[9,3]],
+  3:[[12,3],[12,4],[15,3],[16,4],[18,6],[20,4],[21,3]],
+  4:[[24,6],[24,8],[28,4],[32,8],[36,9],[35,5],[42,7]],
+  5:[[48,6],[56,7],[63,9],[72,8],[81,9],[84,7],[96,8]],
+};
+
+function mathBank(grade){
+  const g=Math.min(Math.max(grade,2),5);
+  const mp=MULT_PAIRS[g]||MULT_PAIRS[3];
+  const dp=DIV_PAIRS[g]||DIV_PAIRS[3];
+  const qs=[];
+  shuffle(mp).slice(0,4).forEach(([a,b])=>{
+    const ans=a*b;
+    qs.push({badge:'✖️ Multiply',badgeColor:'#2a5fa8',text:`${a} × ${b} = ?`,equation:`${a} × ${b} = ${ans}`,answer:String(ans),distractors:genD(ans,a,b)});
+  });
+  shuffle(dp).slice(0,3).forEach(([a,b])=>{
+    const product=a*b;
+    qs.push({badge:'➗ Divide',badgeColor:'#1a7a4a',text:`${product} ÷ ${b} = ?`,equation:`${product} ÷ ${b} = ${a}`,answer:String(a),distractors:genD(a,product,b)});
+  });
+  shuffle(mp).slice(0,3).forEach(([a,b])=>{
+    const ans=a*b; const slot=Math.random()<0.5?'first':'second';
+    const correct=slot==='first'?String(a):String(b);
+    qs.push({badge:'🔲 Fill in',badgeColor:'#5c3db8',text:slot==='first'?`___ × ${b} = ${ans}`:`${a} × ___ = ${ans}`,equation:`${a} × ${b} = ${ans}`,answer:correct,distractors:genD(Number(correct),a,b)});
+  });
+  return shuffle(qs).slice(0,10);
+}
+
+// READING
+const READING_BANK = {
+  2:[
+    {image:'🐱',badge:'📖 Words',badgeColor:'#1a7a4a',text:'What word matches this picture?',answer:'CAT',distractors:['DOG','RAT','BAT']},
+    {image:'☀️',badge:'📖 Reading',badgeColor:'#1a7a4a',text:'Which word describes the sun?',answer:'HOT',distractors:['WET','COLD','DARK']},
+    {image:'🏠',badge:'📖 Rhymes',badgeColor:'#1a7a4a',text:'Which word rhymes with HOUSE?',answer:'MOUSE',distractors:['TREE','BOOK','CAKE']},
+    {image:'🐶',badge:'📖 Reading',badgeColor:'#1a7a4a',text:'The dog ran fast. What did the dog do?',answer:'RAN',distractors:['ATE','SLEPT','SWAM']},
+    {image:'🌧️',badge:'📖 Words',badgeColor:'#1a7a4a',text:'What is falling from the sky?',answer:'RAIN',distractors:['SNOW','HAIL','LEAVES']},
+    {image:'🎂',badge:'📖 Rhymes',badgeColor:'#1a7a4a',text:'Which word rhymes with CAKE?',answer:'LAKE',distractors:['FISH','TREE','BALL']},
+    {image:'📚',badge:'📖 Reading',badgeColor:'#1a7a4a',text:'I READ a book. What does READ mean?',answer:'Look at words',distractors:['Draw a picture','Sleep','Jump up']},
+    {image:'🌳',badge:'📖 Words',badgeColor:'#1a7a4a',text:'Leaves grow on a ___.',answer:'TREE',distractors:['HOUSE','CAR','BOOK']},
+  ],
+  3:[
+    {image:'🦋',badge:'📖 Reading',badgeColor:'#1a7a4a',text:'"The butterfly was beautiful." What does beautiful mean?',answer:'Pretty to look at',distractors:['Very loud','Smells bad','Really fast']},
+    {image:'🌊',badge:'📖 Words',badgeColor:'#1a7a4a',text:'Which word means a large body of water?',answer:'OCEAN',distractors:['RIVER','POND','PUDDLE']},
+    {image:'📝',badge:'📖 Reading',badgeColor:'#1a7a4a',text:'"She was NERVOUS before her test." Nervous means:',answer:'Worried and scared',distractors:['Happy and excited','Tired and sleepy','Angry and loud']},
+    {image:'🔥',badge:'📖 Rhymes',badgeColor:'#1a7a4a',text:'Which word rhymes with HEAT?',answer:'BEAT',distractors:['COOL','BURN','WAVE']},
+    {image:'🐘',badge:'📖 Reading',badgeColor:'#1a7a4a',text:'"Elephants are enormous." Enormous means:',answer:'Very big',distractors:['Very fast','Very loud','Very soft']},
+    {image:'🏆',badge:'📖 Words',badgeColor:'#1a7a4a',text:'Which word means to win first place?',answer:'CHAMPION',distractors:['PLAYER','TEAM','COACH']},
+  ],
+};
+function readingBank(grade){
+  const g=grade<=2?2:3;
+  return shuffle(READING_BANK[g]||READING_BANK[2]).slice(0,10);
+}
+
+// LIFE SKILLS
+const LIFE_BANK = {
+  2:[
+    {image:'🦷',badge:'🏠 Life Skills',badgeColor:'#a84a10',text:'When should you brush your teeth?',answer:'Morning and night',distractors:['Once a week','Only at night','Never']},
+    {image:'🤧',badge:'🏠 Life Skills',badgeColor:'#a84a10',text:'You sneeze. What do you use?',answer:'A tissue',distractors:['Your shirt','Your hands','A plate']},
+    {image:'🌧️',badge:'🏠 Life Skills',badgeColor:'#a84a10',text:'It\'s raining. What do you bring?',answer:'An umbrella',distractors:['Sunglasses','Flip flops','A kite']},
+    {image:'🍽️',badge:'🏠 Life Skills',badgeColor:'#a84a10',text:'After dinner, what should you do?',answer:'Clear your plate',distractors:['Leave everything','Jump on the couch','Run outside']},
+    {image:'🚦',badge:'🏠 Safety',badgeColor:'#a84a10',text:'The traffic light is RED. What do you do?',answer:'STOP',distractors:['GO fast','Turn around','Close your eyes']},
+    {image:'🤝',badge:'🏠 Social',badgeColor:'#a84a10',text:'Someone helps you. What do you say?',answer:'Thank you',distractors:['Go away','Whatever','I don\'t care']},
+    {image:'😠',badge:'🏠 Social',badgeColor:'#a84a10',text:'You feel angry. What is a good thing to do?',answer:'Take deep breaths',distractors:['Hit someone','Break things','Scream very loud']},
+    {image:'🧼',badge:'🏠 Life Skills',badgeColor:'#a84a10',text:'Before eating, you should always:',answer:'Wash your hands',distractors:['Watch TV','Run around','Read a book']},
+  ],
+  3:[
+    {image:'📞',badge:'🏠 Safety',badgeColor:'#a84a10',text:'There is an emergency. What number do you call?',answer:'911',distractors:['411','211','811']},
+    {image:'🌡️',badge:'🏠 Life Skills',badgeColor:'#a84a10',text:'You feel sick. What should you do first?',answer:'Tell an adult',distractors:['Go to school anyway','Stay outside','Eat lots of candy']},
+    {image:'💊',badge:'🏠 Safety',badgeColor:'#a84a10',text:'You find medicine on the floor. What do you do?',answer:'Tell an adult immediately',distractors:['Try it yourself','Throw it away','Put it in your pocket']},
+    {image:'🆘',badge:'🏠 Safety',badgeColor:'#a84a10',text:'A stranger asks you to get in their car. You should:',answer:'Say NO and find a safe adult',distractors:['Get in if they\'re nice','Ask for candy first','Think about it']},
+  ],
+};
+function lifeBank(grade){
+  const g=grade<=2?2:3;
+  return shuffle([...(LIFE_BANK[2]||[]),...(LIFE_BANK[3]||[])]).slice(0,10);
+}
+
+// SCIENCE
+const SCIENCE_BANK = {
+  2:[
+    {image:'🦋',badge:'🔬 Science',badgeColor:'#5c3db8',text:'A caterpillar grows into a:',answer:'Butterfly',distractors:['Bee','Worm','Beetle']},
+    {image:'🌱',badge:'🔬 Science',badgeColor:'#5c3db8',text:'What do plants need to grow?',answer:'Water and sunlight',distractors:['Candy and soda','Darkness only','Music']},
+    {image:'🌍',badge:'🔬 Science',badgeColor:'#5c3db8',text:'What shape is the Earth?',answer:'Round like a ball',distractors:['Flat like paper','Square','Triangle']},
+    {image:'🐟',badge:'🔬 Science',badgeColor:'#5c3db8',text:'Fish breathe using their:',answer:'Gills',distractors:['Nose','Lungs','Ears']},
+    {image:'☁️',badge:'🔬 Science',badgeColor:'#5c3db8',text:'Rain comes from:',answer:'Clouds',distractors:['The sun','The ground','Mountains']},
+    {image:'🌙',badge:'🔬 Science',badgeColor:'#5c3db8',text:'The moon goes around:',answer:'The Earth',distractors:['The sun','Mars','Other stars']},
+    {image:'🌡️',badge:'🔬 Science',badgeColor:'#5c3db8',text:'When it is very cold, water becomes:',answer:'Ice',distractors:['Steam','Gas','Fire']},
+    {image:'🐻',badge:'🔬 Science',badgeColor:'#5c3db8',text:'Bears sleep all winter. This is called:',answer:'Hibernation',distractors:['Migration','Vacation','Camouflage']},
+  ],
+  3:[
+    {image:'🔭',badge:'🔬 Science',badgeColor:'#5c3db8',text:'The Earth goes around the:',answer:'Sun',distractors:['Moon','Mars','Jupiter']},
+    {image:'🧲',badge:'🔬 Science',badgeColor:'#5c3db8',text:'A magnet attracts objects made of:',answer:'Metal/Iron',distractors:['Wood','Plastic','Glass']},
+    {image:'💧',badge:'🔬 Science',badgeColor:'#5c3db8',text:'Water turning into steam is called:',answer:'Evaporation',distractors:['Condensation','Freezing','Melting']},
+    {image:'🌈',badge:'🔬 Science',badgeColor:'#5c3db8',text:'A rainbow is made of:',answer:'Light through water drops',distractors:['Paint in the sky','Clouds and stars','Magic']},
+    {image:'🫀',badge:'🔬 Science',badgeColor:'#5c3db8',text:'The heart pumps ___ around your body:',answer:'Blood',distractors:['Air','Water','Food']},
+  ],
+};
+function scienceBank(grade){
+  const g=grade<=2?2:3;
+  return shuffle([...(SCIENCE_BANK[2]||[]),...(SCIENCE_BANK[3]||[])]).slice(0,10);
+}
+
+// ══════════════════════════════════════════════════
+//  STATE
+// ══════════════════════════════════════════════════
+const COLORS = [
+  {id:'blue',  label:'Blue',  dot:'🔵',spoken:['blue']},
+  {id:'green', label:'Green', dot:'🟢',spoken:['green']},
+  {id:'purple',label:'Purple',dot:'🟣',spoken:['purple']},
+  {id:'red',   label:'Red',   dot:'🔴',spoken:['red']},
+];
+
+let currentSubject='math', currentGrade=2;
+let queue=[], qIndex=0, currentQ=null;
+let answered=false, roundCorrect=0, wrongQuestions=[];
+let colorAssignment=[];
+
+// ══════════════════════════════════════════════════
+//  SCREENS
+// ══════════════════════════════════════════════════
+function showScreen(name){
+  document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));
+  document.getElementById(name).classList.add('active');
+  if(name==='progress') renderProgressScreen();
+  if(name==='home') updateHomeBadges();
+}
+
+// ══════════════════════════════════════════════════
+//  GRADE
+// ══════════════════════════════════════════════════
+function setGrade(g){
+  currentGrade=g;
+  document.querySelectorAll('.grade-btn').forEach(b=>b.classList.remove('active'));
+  document.getElementById('g'+g).classList.add('active');
+}
+
+// ══════════════════════════════════════════════════
+//  START SUBJECT
+// ══════════════════════════════════════════════════
+const SUBJ_META = {
+  math:    {name:'🔢 Math',    color:'#2a5fa8', fill:'var(--math-b)'},
+  reading: {name:'📖 Reading', color:'#1a7a4a', fill:'var(--read-b)'},
+  life:    {name:'🏠 Life Skills',color:'#a84a10',fill:'var(--life-b)'},
+  science: {name:'🔬 Science', color:'#5c3db8', fill:'var(--sci-b)'},
+};
+
+function startSubject(subj){
+  currentSubject=subj; qIndex=0; roundCorrect=0; wrongQuestions=[];
+  const meta=SUBJ_META[subj];
+  document.getElementById('quiz-subj-name').textContent=meta.name;
+  document.getElementById('quiz-subj-name').style.color=meta.color;
+  document.getElementById('prog-fill').style.background=meta.fill;
+  if(subj==='math')    queue=mathBank(currentGrade);
+  else if(subj==='reading') queue=readingBank(currentGrade);
+  else if(subj==='life')    queue=lifeBank(currentGrade);
+  else                      queue=scienceBank(currentGrade);
+  showScreen('quiz');
+  renderQuestion();
+}
+
+function startNewRound(){
+  document.getElementById('celebration').classList.remove('show');
+  startSubject(currentSubject);
+}
+
+// ══════════════════════════════════════════════════
+//  RENDER QUESTION
+// ══════════════════════════════════════════════════
+function renderQuestion(){
+  currentQ=queue[qIndex]; answered=false;
+  const pct=Math.round((qIndex/queue.length)*100);
+  document.getElementById('prog-fill').style.width=pct+'%';
+  document.getElementById('prog-label').textContent=`Question ${qIndex+1} of ${queue.length}`;
+
+  const img=currentQ.image?`<div class="q-image">${currentQ.image}</div>`:'';
+  document.getElementById('question-card').innerHTML=`
+    <div class="q-badge" style="background:${currentQ.badgeColor}18;color:${currentQ.badgeColor}">${currentQ.badge}</div>
+    ${img}
+    <div class="q-text">${currentQ.text}</div>
+    <div class="q-hint">Say the color or point &amp; tap</div>
+  `;
+
+  const vals=shuffle([currentQ.answer,...currentQ.distractors]).slice(0,4);
+  while(vals.length<4) vals.push('?');
+  const colorOrder=shuffle([...COLORS]);
+  colorAssignment=vals.map((val,i)=>({
+    colorId:colorOrder[i].id, colorLabel:colorOrder[i].label,
+    dot:colorOrder[i].dot, spoken:colorOrder[i].spoken, value:val, idx:i
+  }));
+
+  document.getElementById('color-legend').innerHTML=colorAssignment.map(c=>`
+    <div class="legend-chip" style="background:var(--${c.colorId}-bg);color:var(--${c.colorId}-txt)">
+      ${c.dot} ${c.colorLabel}
+    </div>`).join('');
+
+  document.getElementById('answers-grid').innerHTML=colorAssignment.map(c=>`
+    <button class="ans-btn color-${c.colorId}" id="opt-${c.idx}" onclick="selectAnswer(${c.idx})">
+      <div class="btn-stripe"></div>
+      <div class="btn-color-label">${c.dot} ${c.colorLabel}</div>
+      <div class="btn-value">${c.value}</div>
+    </button>`).join('');
+
+  const fb=document.getElementById('feedback');
+  fb.className='feedback-area'; fb.innerHTML='';
+  document.getElementById('next-btn').style.display='none';
+  setMicBar('idle');
+
+  document.getElementById('quiz-scroll').scrollTop=0;
+  speakQ(`${currentQ.text}  Say the color of your answer.`);
+}
+
+// ══════════════════════════════════════════════════
+//  SELECT ANSWER
+// ══════════════════════════════════════════════════
+function selectAnswer(idx){
+  if(answered) return;
+  answered=true; stopMic();
+
+  const chosen=colorAssignment[idx];
+  const isCorrect=chosen.value===currentQ.answer;
+  const correctEntry=colorAssignment.find(c=>c.value===currentQ.answer);
+  const fb=document.getElementById('feedback');
+
+  document.getElementById('opt-'+correctEntry.idx).classList.add('correct');
+  if(!isCorrect) document.getElementById('opt-'+idx).classList.add('wrong');
+
+  if(isCorrect){
+    roundCorrect++;
+    const phrase=CHEERS[Math.floor(Math.random()*CHEERS.length)];
+    fb.className='feedback-area show good';
+    fb.innerHTML=`<div>${phrase}</div><div class="equation-display">${currentQ.equation||''}</div>`;
+    setTimeout(()=>speakCheer(phrase),350);
+  } else {
+    wrongQuestions.push(currentQ.text);
+    fb.className='feedback-area show bad';
+    fb.innerHTML=`<div>💙 Good try Shaan! The answer is <strong>${currentQ.answer}</strong> — the <strong>${correctEntry.dot} ${correctEntry.colorLabel}</strong> button</div>
+      ${currentQ.equation?`<div class="equation-display">${currentQ.equation}</div>`:''}`;
+    setTimeout(()=>speakGent(`Good try Shaan. The answer is ${currentQ.answer}.`),350);
+  }
+
+  document.getElementById('next-btn').style.display='block';
+  setTimeout(()=>{ if(answered) nextQuestion(); }, isCorrect?3800:5000);
+}
+
+function nextQuestion(){
+  qIndex++;
+  if(qIndex>=queue.length){
+    logSession(currentSubject, currentGrade, queue.length, roundCorrect, wrongQuestions);
+    showCelebration();
+  } else renderQuestion();
+}
+
+function showCelebration(){
+  document.getElementById('cel-msg').textContent=
+    `You got ${roundCorrect} out of ${queue.length} right! Total stars: ${progressData.totalStars} ⭐`;
+  document.getElementById('celebration').classList.add('show');
+  setTimeout(()=>speakCheer(
+    `Shaan, you finished the round! You got ${roundCorrect} right! You are absolutely incredible and I am so proud of you!`
+  ),500);
+}
+
+// ══════════════════════════════════════════════════
+//  PROGRESS SCREEN
+// ══════════════════════════════════════════════════
+function renderProgressScreen(){
+  const p=progressData;
+  const totalSessions=p.sessions.length;
+  const recentSessions=p.sessions.slice(-7);
+  const recentCorrect=recentSessions.reduce((a,s)=>a+s.correct,0);
+  const recentTotal=recentSessions.reduce((a,s)=>a+s.total,0);
+  const recentPct=recentTotal>0?Math.round((recentCorrect/recentTotal)*100):0;
+
+  let subjectHTML='';
+  ['math','reading','life','science'].forEach(subj=>{
+    const s=p.bySubject[subj];
+    const meta=SUBJ_META[subj];
+    const pct=s&&s.attempts>0?Math.round((s.correct/s.attempts)*100):null;
+    subjectHTML+=`
+      <div class="stat-row">
+        <span class="stat-label">${meta.name}</span>
+        ${pct!==null?`
+          <div class="subj-progress-bar"><div class="subj-progress-fill" style="width:${pct}%;background:${meta.fill.replace('var(--','').replace(')','').replace(/-b$/,'-mid')?meta.color:meta.color}"></div></div>
+          <span class="stat-val ${pct>=70?'green':'red'}">${pct}%</span>
+        `:'<span class="stat-val" style="color:var(--muted)">Not yet</span>'}
+      </div>`;
+  });
+
+  // Recent wrong questions
+  let wrongHTML='';
+  ['math','reading','life','science'].forEach(subj=>{
+    const s=p.bySubject[subj];
+    if(s&&s.wrong&&s.wrong.length>0){
+      const recent=[...new Set(s.wrong)].slice(-3);
+      wrongHTML+=`<div style="margin-bottom:8px"><span style="font-weight:800;font-size:0.82rem;color:var(--muted)">${SUBJ_META[subj].name}</span>`;
+      recent.forEach(q=>{ wrongHTML+=`<div style="font-size:0.82rem;padding:4px 0;border-bottom:1px solid #f5f5f5">${q}</div>`; });
+      wrongHTML+='</div>';
+    }
+  });
+
+  document.getElementById('prog-content').innerHTML=`
+    <div class="stat-card">
+      <h3>Overall Stats</h3>
+      <div class="stat-row"><span class="stat-label">⭐ Total Stars</span><span class="stat-val green">${p.totalStars}</span></div>
+      <div class="stat-row"><span class="stat-label">🔥 Day Streak</span><span class="stat-val green">${p.streak}</span></div>
+      <div class="stat-row"><span class="stat-label">📅 Sessions completed</span><span class="stat-val">${totalSessions}</span></div>
+      <div class="stat-row"><span class="stat-label">📈 Last 7 sessions accuracy</span><span class="stat-val ${recentPct>=70?'green':'red'}">${recentTotal>0?recentPct+'%':'—'}</span></div>
+    </div>
+
+    <div class="stat-card">
+      <h3>By Subject</h3>
+      ${subjectHTML}
+    </div>
+
+    ${wrongHTML?`<div class="stat-card"><h3>🔄 Needs Practice</h3>${wrongHTML}</div>`:''}
+
+    <button class="print-btn" onclick="printReport()">🖨️ Print / Save Report for Teacher</button>
+    <div style="height:8px"></div>
+  `;
+}
+
+function printReport(){
+  const p=progressData;
+  const today=new Date().toLocaleDateString('en-US',{weekday:'long',year:'numeric',month:'long',day:'numeric'});
+  let subRows='';
+  ['math','reading','life','science'].forEach(subj=>{
+    const s=p.bySubject[subj]; const meta=SUBJ_META[subj];
+    const pct=s&&s.attempts>0?Math.round((s.correct/s.attempts)*100)+'%':'Not attempted';
+    subRows+=`<tr><td>${meta.name}</td><td>${s?s.correct:0}</td><td>${s?s.attempts:0}</td><td><strong>${pct}</strong></td></tr>`;
+  });
+  const win=window.open('','_blank');
+  win.document.write(`<!DOCTYPE html><html><head><title>ShaanSmart Progress Report</title>
+  <style>body{font-family:Arial,sans-serif;padding:40px;max-width:700px;margin:0 auto}
+  h1{color:#2a5fa8}h2{color:#444;border-bottom:2px solid #eee;padding-bottom:8px}
+  table{width:100%;border-collapse:collapse;margin:16px 0}
+  th,td{text-align:left;padding:10px 12px;border-bottom:1px solid #eee}
+  th{background:#f0f4ff;color:#2a5fa8;font-weight:bold}
+  .highlight{background:#d4f5e2;color:#1a7a4a;padding:3px 8px;border-radius:4px}
+  .footer{margin-top:40px;font-size:0.8rem;color:#aaa}
+  @media print{button{display:none}}</style></head><body>
+  <h1>🌟 ShaanSmart — Progress Report</h1>
+  <p><strong>Student:</strong> Shaan &nbsp;&nbsp; <strong>Date:</strong> ${today}</p>
+  <h2>Summary</h2>
+  <p>⭐ <strong>Total Stars Earned:</strong> ${p.totalStars} &nbsp;&nbsp; 🔥 <strong>Day Streak:</strong> ${p.streak} days &nbsp;&nbsp; 📅 <strong>Sessions:</strong> ${p.sessions.length}</p>
+  <h2>Performance by Subject</h2>
+  <table><thead><tr><th>Subject</th><th>Correct</th><th>Attempted</th><th>Accuracy</th></tr></thead>
+  <tbody>${subRows}</tbody></table>
+  <h2>What Shaan Knows</h2>
+  <p>Shaan independently answered questions across Math, Reading, Life Skills, and Science by saying or pointing to a color-coded answer (Blue, Green, Purple, Red). All answers recorded are Shaan's own responses.</p>
+  <div class="footer">Generated by ShaanSmart · Built for Shaan</div>
+  <br><button onclick="window.print()">🖨️ Print this report</button>
+  </body></html>`);
+  win.document.close();
+}
+
+// ══════════════════════════════════════════════════
+//  SPEECH RECOGNITION
+// ══════════════════════════════════════════════════
+let recognition=null, micActive=false;
+function setupSpeech(){
+  const SR=window.SpeechRecognition||window.webkitSpeechRecognition;
+  if(!SR) return;
+  recognition=new SR();
+  recognition.continuous=false; recognition.interimResults=true; recognition.lang='en-US';
+  recognition.onstart=()=>{
+    micActive=true;
+    document.getElementById('mic-btn').classList.add('active');
+    document.getElementById('mic-btn').textContent='🔴';
+    setMicBar('listening');
+  };
+  recognition.onresult=e=>{
+    let t=''; for(let i=e.resultIndex;i<e.results.length;i++) t+=e.results[i][0].transcript;
+    t=t.trim().toLowerCase();
+    if(!currentQ||answered) return;
+    for(const c of colorAssignment){
+      if(c.spoken.some(w=>t.includes(w))){
+        setMicBar('heard',`Heard: "${c.colorLabel}"`); stopMic();
+        setTimeout(()=>selectAnswer(c.idx),380); return;
+      }
+    }
+    if(t.length>0) setMicBar('listening',`Listening… "${t}"`);
+  };
+  recognition.onend=()=>{
+    micActive=false;
+    document.getElementById('mic-btn').classList.remove('active');
+    document.getElementById('mic-btn').textContent='🎤';
+    if(!answered) setMicBar('idle');
+  };
+  recognition.onerror=()=>{
+    micActive=false;
+    document.getElementById('mic-btn').classList.remove('active');
+    document.getElementById('mic-btn').textContent='🎤';
+    setMicBar('idle');
+  };
+}
+function toggleMic(){
+  if(!recognition){alert('Speech recognition needs Chrome or Edge.');return;}
+  if(micActive) stopMic(); else try{recognition.start();}catch(e){}
+}
+function stopMic(){ if(recognition&&micActive) try{recognition.stop();}catch(e){} }
+function setMicBar(state,extra=''){
+  const bar=document.getElementById('mic-bar');
+  if(!bar) return;
+  if(state==='idle')      {bar.className='mic-bar';bar.textContent='🎤 Press mic and say the color — or point & tap';}
+  else if(state==='listening'){bar.className='mic-bar listening';bar.textContent='🔴 Listening… say Blue, Green, Purple, or Red'+(extra?' — '+extra:'');}
+  else if(state==='heard')    {bar.className='mic-bar heard';bar.textContent='✅ '+extra;}
+}
+
+// ══════════════════════════════════════════════════
+//  SERVICE WORKER
+// ══════════════════════════════════════════════════
+if('serviceWorker' in navigator){
+  window.addEventListener('load',()=>{
+    navigator.serviceWorker.register('./sw.js').catch(()=>{});
+  });
+}
+
+// ══════════════════════════════════════════════════
+//  INIT
+// ══════════════════════════════════════════════════
+loadProgress();
+updateHomeBadges();
+setupSpeech();
+</script>
+</body>
+</html>
