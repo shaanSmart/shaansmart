@@ -201,8 +201,8 @@ html,body{height:100%;overflow:hidden;font-family:'Nunito',sans-serif;color:#1a1
 .calm-ready-btn:active{transform:scale(.96);}
 
 /* BREAK BUTTON styles */
-.break-btn-big{position:absolute;bottom:90px;right:14px;background:rgba(91,155,213,.9);border:none;border-radius:16px;padding:10px 16px;font-family:'Nunito',sans-serif;font-size:.82rem;font-weight:900;color:white;cursor:pointer;box-shadow:0 4px 14px rgba(0,0,0,.2);z-index:10;display:none;}
-.break-btn-small{position:absolute;bottom:92px;right:14px;background:rgba(91,155,213,.7);border:none;border-radius:50%;width:42px;height:42px;font-size:1.2rem;cursor:pointer;box-shadow:0 3px 10px rgba(0,0,0,.15);z-index:10;display:none;}
+.break-btn-big{background:rgba(91,155,213,.9);border:none;border-radius:16px;padding:10px 16px;font-family:'Nunito',sans-serif;font-size:.82rem;font-weight:900;color:white;cursor:pointer;box-shadow:0 4px 14px rgba(0,0,0,.2);display:none;}
+.break-btn-small{background:rgba(91,155,213,.7);border:none;border-radius:50%;width:52px;height:52px;font-size:1.4rem;cursor:pointer;box-shadow:0 3px 10px rgba(0,0,0,.15);display:none;}
 .break-btn-big.show,.break-btn-small.show{display:block;}
 
 /* MUTE button in quiz header */
@@ -283,9 +283,9 @@ html,body{height:100%;overflow:hidden;font-family:'Nunito',sans-serif;color:#1a1
   <div class="transition-warn" id="transition-warn">Almost done! Last 2 questions 🌟</div>
   <div class="mic-st" id="mic-st"></div>
   <div class="ans-grid" id="ans-grid"></div>
-  <button class="break-btn-big" id="break-btn-big" onclick="startCalm()">🧘 Take a Break</button>
-  <button class="break-btn-small" id="break-btn-small" onclick="startCalm()">🧘</button>
   <div class="quiz-bottom">
+    <button class="break-btn-big" id="break-btn-big" onclick="startCalm()">🧘 Break</button>
+    <button class="break-btn-small" id="break-btn-small" onclick="startCalm()">🧘</button>
     <button class="mic-btn" id="mic-btn" onclick="toggleMic()">🎤</button>
     <button class="next-btn" id="next-btn" onclick="nextQ()">Next ➡️</button>
   </div>
@@ -329,8 +329,6 @@ html,body{height:100%;overflow:hidden;font-family:'Nunito',sans-serif;color:#1a1
       <div class="game-score" id="game-score">0</div>
     </div>
   </div>
-  <button class="break-btn-big" id="game-break-btn-big" onclick="startCalm()">🧘 Take a Break</button>
-  <button class="break-btn-small" id="game-break-btn-small" onclick="startCalm()">🧘</button>
   <div class="timer-wrap">
     <div class="timer-bg"><div class="timer-fill" id="timer-fill" style="width:100%"></div></div>
   </div>
@@ -423,6 +421,15 @@ html,body{height:100%;overflow:hidden;font-family:'Nunito',sans-serif;color:#1a1
       </div>
     </div>
 
+
+    <!-- MIC -->
+    <div class="set-card">
+      <div class="set-card-title">🎤 Microphone</div>
+      <div class="set-row">
+        <div><div class="set-row-label">Show mic button</div><div class="set-row-sub">Let Shaan answer by saying the color</div></div>
+        <button class="set-toggle on" id="tog-mic" onclick="toggleSetting('micOn',this)"></button>
+      </div>
+    </div>
     <!-- GAME MODE -->
     <div class="set-card">
       <div class="set-card-title">⚡ Game Mode Default Timer</div>
@@ -849,6 +856,7 @@ let CFG = {
   breakStyle: 'big',   // 'big' | 'small'
   calmDur: 60,
   gameTime: 60,
+  micOn: true,
 };
 
 function loadCFG(){
@@ -972,6 +980,10 @@ function speak(txt, rate=0.82, pitch=1.22){
 }
 
 let _muted = false;
+function updateMicVisibility(){
+  const btn = document.getElementById('mic-btn');
+  if(btn) btn.style.display = CFG.micOn ? '' : 'none';
+}
 function toggleMute(){
   _muted = !_muted;
   CFG.voice = !_muted;
