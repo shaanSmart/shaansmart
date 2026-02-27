@@ -88,7 +88,7 @@ html,body{height:100%;overflow:hidden;font-family:'Nunito',sans-serif;color:#1a1
 .ans-btn{border:5px solid transparent;border-radius:26px;cursor:pointer;display:flex;flex-direction:column;align-items:stretch;overflow:hidden;box-shadow:0 5px 18px rgba(0,0,0,.12);transition:transform .14s;}
 .ans-btn:active{transform:scale(.96);}
 .btn-bar{height:20px;flex-shrink:0;border-radius:20px 20px 0 0;}
-.btn-num{flex:1;display:flex;align-items:center;justify-content:center;font-size:clamp(4rem,18vw,9rem);font-weight:900;line-height:1;padding:4px;word-break:break-word;text-align:center;}
+.btn-num{flex:1;display:flex;align-items:center;justify-content:center;font-size:clamp(4rem,18vw,9rem);font-weight:900;line-height:1.05;padding:8px;text-align:center;overflow:hidden;}
 
 .ans-btn.blue{background:var(--blue-bg);border-color:var(--blue-mid);}
 .ans-btn.blue .btn-bar{background:var(--blue-mid);}
@@ -289,7 +289,19 @@ function renderQ(){
   while(vals.length<4)vals.push('?');
   const cols=sh([...COLORS]);
   colorMap=vals.map((val,i)=>({...cols[i],value:val,idx:i}));
-  document.getElementById('ans-grid').innerHTML=colorMap.map(c=>`<button class="ans-btn ${c.id}" id="opt-${c.idx}" onclick="pick(${c.idx})"><div class="btn-bar"></div><div class="btn-num">${c.value}</div></button>`).join('');
+  document.getElementById('ans-grid').innerHTML=colorMap.map(c=>`<button class="ans-btn ${c.id}" id="opt-${c.idx}" onclick="pick(${c.idx})"><div class="btn-bar"></div><div class="btn-num" id="num-${c.idx}">${c.value}</div></button>`).join('');
+
+  // Adapt font size to text length so nothing wraps
+  colorMap.forEach(c=>{
+    const el=document.getElementById('num-'+c.idx);
+    const len=c.value.length;
+    if(len<=2)       el.style.fontSize='clamp(4rem,18vw,9rem)';
+    else if(len<=4)  el.style.fontSize='clamp(2.8rem,12vw,6rem)';
+    else if(len<=6)  el.style.fontSize='clamp(2rem,8vw,4rem)';
+    else if(len<=10) el.style.fontSize='clamp(1.5rem,6vw,3rem)';
+    else             el.style.fontSize='clamp(1.1rem,4vw,2rem)';
+  });
+
   const fb=document.getElementById('feedback');fb.className='feedback';fb.innerHTML='';
   micSt('idle');
   document.getElementById('next-btn').style.display='none';
