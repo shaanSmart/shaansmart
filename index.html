@@ -67,7 +67,7 @@ html,body{height:100%;overflow:hidden;font-family:'Nunito',sans-serif;color:#1a1
 @keyframes fadeUp{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:translateY(0)}}
 .q-badge{display:inline-block;border-radius:40px;padding:2px 10px;font-size:.6rem;font-weight:900;text-transform:uppercase;letter-spacing:1px;margin-bottom:4px;}
 .q-img{font-size:2.2rem;margin-bottom:2px;}
-.q-text{font-size:clamp(1.6rem,5.5vw,2.8rem);font-weight:900;line-height:1.2;}
+.q-text{font-size:clamp(2.2rem,8vw,4rem);font-weight:900;line-height:1.2;}
 
 /* Feedback — hidden until answered */
 .feedback{margin:5px 14px 0;border-radius:12px;padding:7px 14px;font-size:.88rem;font-weight:800;text-align:center;display:flex;flex-direction:column;align-items:center;gap:2px;flex-shrink:0;opacity:0;transition:opacity .3s;}
@@ -83,12 +83,12 @@ html,body{height:100%;overflow:hidden;font-family:'Nunito',sans-serif;color:#1a1
 @keyframes pulse{0%,100%{opacity:1}50%{opacity:.5}}
 
 /* ANSWERS — fills ALL remaining vertical space */
-.ans-grid{display:grid;grid-template-columns:1fr 1fr;grid-template-rows:1fr 1fr;gap:16px;padding:10px 14px;flex:1;min-height:0;}
+.ans-grid{display:grid;grid-template-columns:1fr 1fr;grid-template-rows:1fr 1fr;gap:28px;padding:10px 18px 14px;flex:1;min-height:0;}
 
 .ans-btn{border:5px solid transparent;border-radius:26px;cursor:pointer;display:flex;flex-direction:column;align-items:stretch;overflow:hidden;box-shadow:0 5px 18px rgba(0,0,0,.12);transition:transform .14s;}
 .ans-btn:active{transform:scale(.96);}
 .btn-bar{height:20px;flex-shrink:0;border-radius:20px 20px 0 0;}
-.btn-num{flex:1;display:flex;align-items:center;justify-content:center;font-size:clamp(2rem,6.5vw,3.5rem);font-weight:900;line-height:1;padding:8px;word-break:break-word;text-align:center;}
+.btn-num{flex:1;display:flex;align-items:center;justify-content:center;font-size:clamp(4rem,18vw,9rem);font-weight:900;line-height:1;padding:4px;word-break:break-word;text-align:center;}
 
 .ans-btn.blue{background:var(--blue-bg);border-color:var(--blue-mid);}
 .ans-btn.blue .btn-bar{background:var(--blue-mid);}
@@ -284,7 +284,7 @@ function renderQ(){
   document.getElementById('prog-fill').style.width=Math.round(qIdx/queue.length*100)+'%';
   document.getElementById('prog-lbl').textContent=`Question ${qIdx+1} of ${queue.length}`;
   const img=curQ.image?`<div class="q-img">${curQ.image}</div>`:'';
-  document.getElementById('q-box').innerHTML=`<div class="q-badge" style="background:${curQ.bc}18;color:${curQ.bc}">${curQ.badge}</div>${img}<div class="q-text">${curQ.text}</div>`;
+  document.getElementById('q-box').innerHTML=`${img}<div class="q-text">${curQ.text}</div>`;
   const vals=sh([curQ.answer,...curQ.dist]).slice(0,4);
   while(vals.length<4)vals.push('?');
   const cols=sh([...COLORS]);
