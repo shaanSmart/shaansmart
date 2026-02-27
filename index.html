@@ -113,6 +113,54 @@ html,body{height:100%;overflow:hidden;font-family:'Nunito',sans-serif;color:#1a1
 
 /* PROGRESS */
 #progress{background:var(--bg);}
+/* ══ GAME SETUP ═══════════════════════════════ */
+#game-setup{background:linear-gradient(160deg,#1a1a4e,#2a2a8a,#4a4ac8);overflow-y:auto;align-items:center;padding:env(safe-area-inset-top,20px) 20px env(safe-area-inset-bottom,20px);}
+.gs-title{font-size:clamp(1.6rem,7vw,2.4rem);font-weight:900;color:white;margin-top:10px;}
+.gs-sub{font-size:.85rem;color:rgba(255,255,255,.7);font-weight:700;margin-top:2px;margin-bottom:14px;}
+.gs-section{color:rgba(255,255,255,.7);font-size:.7rem;font-weight:800;text-transform:uppercase;letter-spacing:1px;align-self:flex-start;margin-bottom:8px;margin-top:14px;}
+.gs-row{display:flex;gap:8px;flex-wrap:wrap;align-self:flex-start;}
+.gs-btn{background:rgba(255,255,255,.15);border:2px solid rgba(255,255,255,.3);border-radius:40px;padding:8px 18px;font-family:'Nunito',sans-serif;font-size:.85rem;font-weight:800;cursor:pointer;color:white;transition:all .15s;}
+.gs-btn.active{background:white;color:#2a2a8a;border-color:white;}
+.gs-subj-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;width:100%;max-width:500px;margin-top:4px;}
+.gs-subj-card{border-radius:16px;padding:14px 10px;display:flex;flex-direction:column;align-items:center;gap:4px;cursor:pointer;transition:transform .15s;box-shadow:0 4px 14px rgba(0,0,0,.2);border:3px solid transparent;opacity:.65;}
+.gs-subj-card:active{transform:scale(.96);}
+.gs-subj-card.sel{border-color:white;opacity:1;box-shadow:0 0 0 4px rgba(255,255,255,.35);}
+.gs-subj-card.math{background:linear-gradient(135deg,#2a5fa8,#5b9bd5);}
+.gs-subj-card.read{background:linear-gradient(135deg,#1a7a4a,#3db87a);}
+.gs-subj-card.life{background:linear-gradient(135deg,#a84a10,#f07a3a);}
+.gs-subj-card.sci{background:linear-gradient(135deg,#5c3db8,#9b7fd4);}
+.gs-subj-card.mix{background:linear-gradient(135deg,#7a1a7a,#d45bd4);}
+.gs-s-icon{font-size:1.6rem;}.gs-s-name{font-size:.8rem;font-weight:900;color:white;}
+.gs-start{background:white;color:#2a2a8a;border:none;border-radius:20px;padding:16px 50px;font-family:'Nunito',sans-serif;font-size:1.1rem;font-weight:900;cursor:pointer;margin-top:20px;box-shadow:0 6px 20px rgba(0,0,0,.2);transition:transform .15s;}
+.gs-start:active{transform:scale(.96);}
+
+/* ══ GAME SCREEN ══════════════════════════════ */
+#game{background:var(--bg);}
+.game-hdr{display:flex;align-items:center;gap:10px;padding:env(safe-area-inset-top,10px) 16px 10px;background:white;box-shadow:0 2px 8px rgba(0,0,0,.07);flex-shrink:0;}
+.game-subj{font-size:.95rem;font-weight:900;}
+.game-score-wrap{margin-left:auto;display:flex;flex-direction:column;align-items:flex-end;}
+.game-score-lbl{font-size:.55rem;font-weight:800;color:var(--muted);text-transform:uppercase;letter-spacing:.5px;}
+.game-score{font-size:1.6rem;font-weight:900;color:#2a5fa8;line-height:1;}
+.timer-wrap{padding:8px 16px 2px;flex-shrink:0;}
+.timer-bg{background:#dde3f5;border-radius:40px;height:16px;overflow:hidden;}
+.timer-fill{height:100%;border-radius:40px;background:linear-gradient(90deg,#e85555 0%,#f0a030 50%,#3db87a 100%);transition:width .25s linear;}
+.score-flash{position:fixed;top:40%;left:50%;transform:translate(-50%,-50%);font-size:2.8rem;font-weight:900;pointer-events:none;opacity:0;z-index:500;}
+.score-flash.plus{color:var(--green-deep);animation:flashUp .7s ease forwards;}
+.score-flash.minus{color:#c0392b;animation:flashUp .7s ease forwards;}
+@keyframes flashUp{0%{opacity:1;transform:translate(-50%,-50%)}100%{opacity:0;transform:translate(-50%,-120%)}}
+
+/* ══ GAME END ═════════════════════════════════ */
+#game-end{background:linear-gradient(160deg,#1a1a4e,#2a2a8a,#4a4ac8);align-items:center;justify-content:center;text-align:center;padding:32px 24px;overflow-y:auto;}
+.ge-trophy{font-size:5rem;animation:bounce .7s ease infinite alternate;margin-bottom:6px;}
+.ge-title{font-size:clamp(1.6rem,6vw,2.4rem);font-weight:900;color:white;margin-bottom:4px;}
+.ge-score{font-size:clamp(4rem,18vw,7rem);font-weight:900;color:#ffd700;line-height:1;margin:8px 0;}
+.ge-score-lbl{font-size:.9rem;color:rgba(255,255,255,.7);font-weight:800;margin-bottom:16px;}
+.ge-best{background:rgba(255,255,255,.15);border-radius:16px;padding:12px 24px;color:white;font-weight:800;font-size:.95rem;margin-bottom:20px;}
+.ge-best.new-record{background:rgba(255,215,0,.2);border:2px solid gold;animation:glow 1.5s ease infinite alternate;}
+@keyframes glow{from{box-shadow:0 0 8px rgba(255,215,0,.3)}to{box-shadow:0 0 24px rgba(255,215,0,.8)}}
+.ge-btn{background:white;color:#2a2a8a;border:none;border-radius:16px;padding:14px 34px;font-family:'Nunito',sans-serif;font-size:1rem;font-weight:900;cursor:pointer;margin:5px;}
+.ge-btn.outline{background:transparent;border:2px solid rgba(255,255,255,.5);color:white;}
+
 .prog-hdr{background:white;padding:env(safe-area-inset-top,12px) 18px 12px;display:flex;align-items:center;gap:12px;box-shadow:0 2px 8px rgba(0,0,0,.06);flex-shrink:0;}
 .prog-hdr h2{font-size:1.1rem;font-weight:900;}
 .prog-content{flex:1;overflow-y:auto;padding:16px;display:flex;flex-direction:column;gap:14px;}
@@ -160,6 +208,7 @@ html,body{height:100%;overflow:hidden;font-family:'Nunito',sans-serif;color:#1a1
     <div class="subject-card life" onclick="startSubject('life')"><div class="s-badge" id="life-badge">—</div><div class="s-icon">🏠</div><div class="s-name">Life Skills</div><div class="s-count">Daily · Safety · Social</div></div>
     <div class="subject-card sci" onclick="startSubject('science')"><div class="s-badge" id="science-badge">—</div><div class="s-icon">🔬</div><div class="s-name">Science</div><div class="s-count">Nature · Earth · Animals</div></div>
   </div>
+  <button onclick="showScreen('game-setup')" style="background:linear-gradient(135deg,#ffd700,#ff8c00);border:none;border-radius:20px;padding:14px 40px;font-family:'Nunito',sans-serif;font-size:1rem;font-weight:900;color:#1a1a00;cursor:pointer;box-shadow:0 6px 20px rgba(0,0,0,.25);margin-bottom:16px;width:100%;max-width:500px;transition:transform .15s;" onmousedown="this.style.transform='scale(.97)'" onmouseup="this.style.transform='scale(1)'">⚡ Game Mode — Beat the Clock!</button>
   <div class="nav-bar">
     <button class="nav-item active" onclick="showScreen('home')"><span class="nav-icon">🏠</span><span class="nav-label">Home</span></button>
     <button class="nav-item" onclick="showScreen('progress')"><span class="nav-icon">📊</span><span class="nav-label">Progress</span></button>
@@ -186,6 +235,68 @@ html,body{height:100%;overflow:hidden;font-family:'Nunito',sans-serif;color:#1a1
     <button class="next-btn" id="next-btn" onclick="nextQ()">Next ➡️</button>
   </div>
 </div>
+
+
+<!-- GAME SETUP -->
+<div class="screen" id="game-setup">
+  <div style="font-size:3rem;margin-top:12px;animation:float 2s ease-in-out infinite">⚡</div>
+  <div class="gs-title">Game Mode</div>
+  <div class="gs-sub">How many can Shaan get right?</div>
+
+  <div class="gs-section">Pick a subject</div>
+  <div class="gs-subj-grid">
+    <div class="gs-subj-card math sel" onclick="gsPickSubj('math',this)"><div class="gs-s-icon">🔢</div><div class="gs-s-name">Math</div></div>
+    <div class="gs-subj-card read" onclick="gsPickSubj('reading',this)"><div class="gs-s-icon">📖</div><div class="gs-s-name">Reading</div></div>
+    <div class="gs-subj-card life" onclick="gsPickSubj('life',this)"><div class="gs-s-icon">🏠</div><div class="gs-s-name">Life Skills</div></div>
+    <div class="gs-subj-card sci" onclick="gsPickSubj('science',this)"><div class="gs-s-icon">🔬</div><div class="gs-s-name">Science</div></div>
+    <div class="gs-subj-card mix" onclick="gsPickSubj('mix',this)" style="grid-column:1/-1"><div class="gs-s-icon">🌟</div><div class="gs-s-name">Mix — All Subjects!</div></div>
+  </div>
+
+  <div class="gs-section">Time limit</div>
+  <div class="gs-row">
+    <button class="gs-btn" onclick="gsPickTime(30,this)">30 sec</button>
+    <button class="gs-btn active" onclick="gsPickTime(60,this)">60 sec</button>
+    <button class="gs-btn" onclick="gsPickTime(90,this)">90 sec</button>
+    <button class="gs-btn" onclick="gsPickTime(120,this)">2 min</button>
+  </div>
+
+  <button class="gs-start" onclick="startGame()">⚡ Let's Go!</button>
+  <button class="gs-btn" onclick="showScreen('home')" style="margin-top:12px;align-self:center">← Back</button>
+</div>
+
+<!-- GAME SCREEN -->
+<div class="screen" id="game">
+  <div class="game-hdr">
+    <button class="back-btn" onclick="stopGame()">←</button>
+    <span class="game-subj" id="game-subj">Math</span>
+    <div class="game-score-wrap">
+      <div class="game-score-lbl">Score</div>
+      <div class="game-score" id="game-score">0</div>
+    </div>
+  </div>
+  <div class="timer-wrap">
+    <div class="timer-bg"><div class="timer-fill" id="timer-fill" style="width:100%"></div></div>
+  </div>
+  <div class="q-box" id="game-q-box"></div>
+  <div class="feedback" id="game-feedback"></div>
+  <div class="ans-grid" id="game-ans-grid"></div>
+</div>
+
+<!-- GAME END -->
+<div class="screen" id="game-end">
+  <div class="ge-trophy">🏆</div>
+  <div class="ge-title" id="ge-title">Time's up!</div>
+  <div class="ge-score" id="ge-score">0</div>
+  <div class="ge-score-lbl">points</div>
+  <div class="ge-best" id="ge-best">Personal best: 0</div>
+  <div style="font-size:1.6rem;margin-bottom:16px">⭐⭐⭐⭐⭐</div>
+  <button class="ge-btn" onclick="startGame()">⚡ Play Again!</button>
+  <button class="ge-btn outline" onclick="showScreen('game-setup')">Change Settings</button>
+  <button class="ge-btn outline" onclick="showScreen('home')">🏠 Home</button>
+</div>
+
+<!-- SCORE FLASH -->
+<div class="score-flash" id="score-flash"></div>
 
 <!-- PROGRESS -->
 <div class="screen" id="progress">
@@ -372,6 +483,186 @@ function setupMic(){
 function toggleMic(){if(!recognition){alert('Speech needs Safari iOS 15+ or Chrome.');return;}if(micOn)stopMic();else try{recognition.start();}catch(e){}}
 function stopMic(){if(recognition&&micOn)try{recognition.stop();}catch(e){}}
 function micSt(state,extra=''){const el=document.getElementById('mic-st');if(!el)return;if(state==='idle'){el.className='mic-st';el.textContent='';}else if(state==='listening'){el.className='mic-st listening';el.textContent='🔴 Listening…'+(extra?' '+extra:'');}else if(state==='heard'){el.className='mic-st heard';el.textContent='✅ '+extra;}}
+
+
+// ══════════════════════════════════════════════
+// GAME MODE
+// ══════════════════════════════════════════════
+let gmSubj='math', gmTime=60;
+let gmScore=0, gmTimer=null, gmTimeLeft=0, gmQ=null, gmAnswered=false, gmPool=[];
+
+function gsPickSubj(subj, el){
+  gmSubj=subj;
+  document.querySelectorAll('.gs-subj-card').forEach(c=>c.classList.remove('sel'));
+  el.classList.add('sel');
+}
+function gsPickTime(t, el){
+  gmTime=t;
+  document.querySelectorAll('.gs-btn').forEach(b=>b.classList.remove('active'));
+  el.classList.add('active');
+}
+
+function buildGamePool(){
+  let pool=[];
+  if(gmSubj==='mix'){
+    pool=[...mathBank(curGrade),...readingBank(curGrade),...lifeBank(),...scienceBank()];
+  } else if(gmSubj==='math') pool=mathBank(curGrade);
+  else if(gmSubj==='reading') pool=readingBank(curGrade);
+  else if(gmSubj==='life') pool=lifeBank();
+  else pool=scienceBank();
+  return sh(pool);
+}
+
+function startGame(){
+  gmScore=0; gmAnswered=false;
+  gmPool=buildGamePool();
+  let poolIdx=0;
+
+  const meta={math:'🔢 Math',reading:'📖 Reading',life:'🏠 Life',science:'🔬 Science',mix:'🌟 Mix'};
+  const colors={math:'#2a5fa8',reading:'#1a7a4a',life:'#a84a10',science:'#5c3db8',mix:'#7a1a7a'};
+  document.getElementById('game-subj').textContent=meta[gmSubj]||'Game';
+  document.getElementById('game-subj').style.color=colors[gmSubj]||'#2a5fa8';
+  document.getElementById('game-score').textContent='0';
+
+  showScreen('game');
+
+  // Timer
+  gmTimeLeft=gmTime;
+  const fill=document.getElementById('timer-fill');
+  fill.style.transition='none';
+  fill.style.width='100%';
+
+  let lastTick=Date.now();
+  clearInterval(gmTimer);
+  gmTimer=setInterval(()=>{
+    const now=Date.now();
+    gmTimeLeft-=(now-lastTick)/1000;
+    lastTick=now;
+    const pct=Math.max(0,(gmTimeLeft/gmTime)*100);
+    fill.style.transition='width .25s linear';
+    fill.style.width=pct+'%';
+    if(gmTimeLeft<=0){ clearInterval(gmTimer); endGame(); }
+  },100);
+
+  // Render first question
+  function nextGameQ(){
+    if(gmTimeLeft<=0) return;
+    gmAnswered=false;
+    if(poolIdx>=gmPool.length){ gmPool=sh(buildGamePool()); poolIdx=0; }
+    gmQ=gmPool[poolIdx++];
+    renderGameQ(gmQ, nextGameQ);
+  }
+  nextGameQ();
+}
+
+function renderGameQ(q, onNext){
+  const img=q.image?`<div class="q-img">${q.image}</div>`:'';
+  document.getElementById('game-q-box').innerHTML=`${img}<div class="q-text">${q.text}</div>`;
+
+  const vals=sh([q.answer,...q.dist]).slice(0,4);
+  while(vals.length<4) vals.push('?');
+  const cols=sh([...COLORS]);
+  const cmap=vals.map((val,i)=>({...cols[i],value:val,idx:i}));
+
+  document.getElementById('game-ans-grid').innerHTML=cmap.map(c=>`
+    <button class="ans-btn ${c.id}" id="gopt-${c.idx}" onclick="gamePick(${c.idx})">
+      <div class="btn-bar"></div>
+      <div class="btn-num" id="gnum-${c.idx}">${c.value}</div>
+    </button>`).join('');
+
+  cmap.forEach(c=>{
+    const el=document.getElementById('gnum-'+c.idx);
+    const len=c.value.length;
+    if(len<=2)       el.style.fontSize='clamp(4rem,18vw,9rem)';
+    else if(len<=4)  el.style.fontSize='clamp(2.8rem,12vw,6rem)';
+    else if(len<=6)  el.style.fontSize='clamp(2rem,8vw,4rem)';
+    else if(len<=10) el.style.fontSize='clamp(1.5rem,6vw,3rem)';
+    else             el.style.fontSize='clamp(1.1rem,4vw,2rem)';
+  });
+
+  const fb=document.getElementById('game-feedback');
+  fb.className='feedback'; fb.innerHTML='';
+  gmAnswered=false;
+
+  // Store colormap for gamePick
+  window._gmCmap=cmap;
+  window._gmOnNext=onNext;
+}
+
+function gamePick(idx){
+  if(gmAnswered||gmTimeLeft<=0) return;
+  gmAnswered=true;
+  const cmap=window._gmCmap;
+  const onNext=window._gmOnNext;
+  const chosen=cmap[idx];
+  const ok=chosen.value===gmQ.answer;
+  const right=cmap.find(c=>c.value===gmQ.answer);
+
+  document.getElementById('gopt-'+right.idx).classList.add('correct');
+  if(!ok) document.getElementById('gopt-'+idx).classList.add('wrong');
+
+  const flash=document.getElementById('score-flash');
+  if(ok){
+    gmScore=Math.max(0,gmScore+1);
+    document.getElementById('game-score').textContent=gmScore;
+    flash.textContent='+1';
+    flash.className='score-flash plus';
+    setTimeout(()=>flash.className='score-flash',700);
+    const phrase=CHEERS[Math.floor(Math.random()*CHEERS.length)];
+    setTimeout(()=>cheer(phrase),200);
+  } else {
+    gmScore=Math.max(0,gmScore-1);
+    document.getElementById('game-score').textContent=gmScore;
+    flash.textContent='-1';
+    flash.className='score-flash minus';
+    setTimeout(()=>flash.className='score-flash',700);
+  }
+
+  // Auto-advance — faster than regular mode
+  setTimeout(()=>{ if(gmTimeLeft>0) onNext(); }, ok?1400:900);
+}
+
+function endGame(){
+  clearInterval(gmTimer);
+  stopMic();
+
+  // Personal best
+  if(!P.gameBests) P.gameBests={};
+  const key=gmSubj;
+  const prev=P.gameBests[key]||0;
+  const isNew=gmScore>prev;
+  if(isNew) P.gameBests[key]=gmScore;
+  saveP();
+
+  showScreen('game-end');
+
+  const names={math:'Math',reading:'Reading',life:'Life Skills',science:'Science',mix:'All Subjects'};
+  document.getElementById('ge-title').textContent=`${names[gmSubj]} — Time's up!`;
+  document.getElementById('ge-score').textContent=gmScore;
+
+  const bestEl=document.getElementById('ge-best');
+  if(isNew && gmScore>0){
+    bestEl.textContent='🏆 NEW PERSONAL BEST!';
+    bestEl.className='ge-best new-record';
+  } else {
+    bestEl.textContent=`Personal best: ${Math.max(gmScore,prev)} points`;
+    bestEl.className='ge-best';
+  }
+
+  const endMsg=gmScore===0
+    ? `Shaan you tried so hard! Great effort! Let's play again!`
+    : isNew
+    ? `Shaan, NEW RECORD! You got ${gmScore} points! You are absolutely incredible! I am so proud of you!`
+    : `Shaan, you got ${gmScore} points! You are amazing! Keep going — you can beat your best!`;
+
+  setTimeout(()=>cheer(endMsg),500);
+}
+
+function stopGame(){
+  clearInterval(gmTimer);
+  gmTimeLeft=0;
+  showScreen('game-setup');
+}
 
 // SW
 if('serviceWorker' in navigator)window.addEventListener('load',()=>navigator.serviceWorker.register('./sw.js').catch(()=>{}));
